@@ -51,7 +51,7 @@ jobs:
       - name: Install dependencies and run all tests
         run: |
           go generate -tags mysql ./...
-          go test -v -run TestGhostSchemaUpdate ./... -tags=mysql
+          go test -v ./... -tags=mysql
 
   # tests if scripts/install_bb.sh is working correctly.
   install-bb:

@@ -19,6 +19,7 @@ import (
 )
 
 func TestGhostSchemaUpdate(t *testing.T) {
+	t.Skip()
 	const (
 		databaseName            = "testGhostSchemaUpdate"
 		mysqlMigrationStatement = `
