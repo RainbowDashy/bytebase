@@ -90,7 +90,7 @@ func newMigrationContext(config ghostConfig) (*base.MigrationContext, error) {
 	)
 	statement := strings.Join(strings.Fields(config.alterStatement), " ")
 	migrationContext := base.NewMigrationContext()
-	migrationContext.LogLevel.SetLevel(zap.ErrorLevel)
+	// migrationContext.LogLevel.SetLevel(zap.ErrorLevel)
 	migrationContext.InspectorConnectionConfig.Key.Hostname = config.host
 	port := 3306
 	if config.port != "" {
