@@ -1783,8 +1783,7 @@ func (s *SQLService) sqlReviewCheck(ctx context.Context, statement string, envir
 	adviceLevel, adviceList, err := s.sqlCheck(
 		ctx,
 		instance.Engine,
-		dbMetadata.CharacterSet,
-		dbMetadata.Collation,
+		dbMetadata,
 		environment.UID,
 		statement,
 		catalog,
@@ -1831,8 +1830,7 @@ func convertAdviceStatus(status advisor.Status) v1pb.Advice_Status {
 func (s *SQLService) sqlCheck(
 	ctx context.Context,
 	dbType storepb.Engine,
-	dbCharacterSet string,
-	dbCollation string,
+	dbSchema *storepb.DatabaseSchemaMetadata,
 	environmentID int,
 	statement string,
 	catalog catalog.Catalog,
@@ -1850,8 +1848,9 @@ func (s *SQLService) sqlCheck(
 	}
 
 	res, err := advisor.SQLReviewCheck(statement, policy.RuleList, advisor.SQLReviewCheckContext{
-		Charset:         dbCharacterSet,
-		Collation:       dbCollation,
+		Charset:         dbSchema.CharacterSet,
+		Collation:       dbSchema.Collation,
+		DBSchema:        dbSchema,
 		DbType:          dbType,
 		Catalog:         catalog,
 		Driver:          driver,
