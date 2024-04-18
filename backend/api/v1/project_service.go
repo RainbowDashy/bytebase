@@ -412,7 +412,7 @@ func (s *ProjectService) CreateIAMPolicyUpdateActivity(ctx context.Context, remo
 				ContainerUID:      project.UID,
 				Type:              api.ActivityProjectMemberCreate,
 				Level:             api.ActivityInfo,
-				Comment:           fmt.Sprintf("Granted %s to %s (%s).", member.Name, member.Email, binding.Role),
+				Comment:           fmt.Sprintf("Granted %s to %s (%s).", binding.Role, member.Name, member.Email),
 			})
 		}
 	}

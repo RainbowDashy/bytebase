@@ -600,7 +600,7 @@ func UpdateProjectPolicyFromGrantIssue(ctx context.Context, stores *store.Store,
 		ContainerUID:      issue.Project.UID,
 		Type:              api.ActivityProjectMemberCreate,
 		Level:             api.ActivityInfo,
-		Comment:           fmt.Sprintf("Granted %s to %s (%s).", newUser.Name, newUser.Email, roleID),
+		Comment:           fmt.Sprintf("Granted %s to %s (%s).", roleID, newUser.Name, newUser.Email),
 	}, &activity.Metadata{}); err != nil {
 		slog.Warn("Failed to create project activity", log.BBError(err))
 	}

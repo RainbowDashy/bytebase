@@ -927,7 +927,7 @@ func (s *IssueService) ApproveIssue(ctx context.Context, request *v1pb.ApproveIs
 			ContainerUID:      issue.Project.UID,
 			Type:              api.ActivityProjectMemberCreate,
 			Level:             api.ActivityInfo,
-			Comment:           fmt.Sprintf("Granted %s to %s (%s).", newUser.Name, newUser.Email, payload.GrantRequest.Role),
+			Comment:           fmt.Sprintf("Granted %s to %s (%s).", payload.GrantRequest.Role, newUser.Name, newUser.Email),
 		}, &activity.Metadata{}); err != nil {
 			slog.Warn("Failed to create project activity", log.BBError(err))
 		}
