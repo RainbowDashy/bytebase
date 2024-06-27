@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"log/slog"
 	"strings"
 	"time"
 
@@ -196,6 +197,11 @@ func (s *Store) listSheets(ctx context.Context, find *FindSheetMessage) ([]*Shee
 // You should not use this function directly to create sheets.
 // Use CreateSheet in component/sheet instead.
 func (s *Store) CreateSheet(ctx context.Context, create *SheetMessage) (*SheetMessage, error) {
+	defer func() {
+		slog.Debug("store.CreateSheet 8")
+	}()
+
+	slog.Debug("store.CreateSheet 1")
 	if create.Payload == nil {
 		create.Payload = &storepb.SheetPayload{}
 	}
@@ -218,12 +224,15 @@ func (s *Store) CreateSheet(ctx context.Context, create *SheetMessage) (*SheetMe
 		RETURNING id, created_ts, updated_ts, OCTET_LENGTH(statement)
 	`
 
+	slog.Debug("store.CreateSheet 2")
 	tx, err := s.db.BeginTx(ctx, nil)
 	if err != nil {
+		slog.Debug("store.CreateSheet 3")
 		return nil, err
 	}
 	defer tx.Rollback()
 	create.UpdaterID = create.CreatorID
+	slog.Debug("store.CreateSheet 4")
 	if err := tx.QueryRowContext(ctx, query,
 		create.CreatorID,
 		create.CreatorID,
@@ -238,14 +247,17 @@ func (s *Store) CreateSheet(ctx context.Context, create *SheetMessage) (*SheetMe
 		&create.updatedTs,
 		&create.Size,
 	); err != nil {
+		slog.Debug("store.CreateSheet 5")
 		if err == sql.ErrNoRows {
 			return nil, common.FormatDBErrorEmptyRowWithQuery(query)
 		}
 		return nil, err
 	}
 	if err := tx.Commit(); err != nil {
+		slog.Debug("store.CreateSheet 6")
 		return nil, errors.Wrapf(err, "failed to commit transaction")
 	}
+	slog.Debug("store.CreateSheet 7")
 
 	create.CreatedTime = time.Unix(create.createdTs, 0)
 	create.UpdatedTime = time.Unix(create.updatedTs, 0)

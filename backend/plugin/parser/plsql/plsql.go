@@ -2,6 +2,7 @@ package plsql
 
 import (
 	"fmt"
+	"log/slog"
 	"strings"
 
 	"github.com/antlr4-go/antlr/v4"
@@ -12,6 +13,10 @@ import (
 
 // ParsePLSQL parses the given PLSQL.
 func ParsePLSQL(sql string) (antlr.Tree, *antlr.CommonTokenStream, error) {
+	slog.Debug("ParsePLSQL 1")
+	defer func() {
+		slog.Debug("ParsePLSQL 2")
+	}()
 	sql = addSemicolonIfNeeded(sql)
 	lexer := parser.NewPlSqlLexer(antlr.NewInputStream(sql))
 	stream := antlr.NewCommonTokenStream(lexer, 0)
@@ -41,6 +46,10 @@ func ParsePLSQL(sql string) (antlr.Tree, *antlr.CommonTokenStream, error) {
 }
 
 func addSemicolonIfNeeded(sql string) string {
+	slog.Debug("addSemicolonIfNeeded 1")
+	defer func() {
+		slog.Debug("addSemicolonIfNeeded 2")
+	}()
 	lexer := parser.NewPlSqlLexer(antlr.NewInputStream(sql))
 	stream := antlr.NewCommonTokenStream(lexer, 0)
 	stream.Fill()

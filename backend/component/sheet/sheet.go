@@ -57,11 +57,17 @@ func NewManager(store *store.Store) *Manager {
 }
 
 func (sm *Manager) CreateSheet(ctx context.Context, sheet *store.SheetMessage) (*store.SheetMessage, error) {
+	defer func() {
+		slog.Debug("CreateSheet 5")
+	}()
+	slog.Debug("CreateSheet 1")
 	if sheet.Payload == nil {
+		slog.Debug("CreateSheet 2")
 		sheet.Payload = &storepb.SheetPayload{}
 	}
+	slog.Debug("CreateSheet 3")
 	sheet.Payload.Commands = getSheetCommands(sheet.Payload.Engine, sheet.Statement)
-
+	slog.Debug("CreateSheet 4")
 	return sm.store.CreateSheet(ctx, sheet)
 }
 
@@ -112,14 +118,20 @@ func getSheetCommandsGeneral(engine storepb.Engine, statement string) []*storepb
 }
 
 func getSheetCommandsForOracle(statement string) []*storepb.SheetCommand {
+	defer func() {
+		slog.Debug("getSheetCommandsForOracle 5")
+	}()
+	slog.Debug("getSheetCommandsForOracle 1")
 	singleSQLs, err := plsqlparser.SplitSQL(statement)
+	slog.Debug("getSheetCommandsForOracle 2")
 	if err != nil {
+		slog.Debug("getSheetCommandsForOracle 3")
 		if !strings.Contains(err.Error(), "not supported") {
 			slog.Warn("failed to get sheet command for oracle", "statement", statement)
 		}
 		return nil
 	}
-
+	slog.Debug("getSheetCommandsForOracle 4")
 	var sheetCommands []*storepb.SheetCommand
 	for _, s := range singleSQLs {
 		sheetCommands = append(sheetCommands, &storepb.SheetCommand{
