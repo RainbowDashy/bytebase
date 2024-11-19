@@ -409,6 +409,8 @@ func (exec *DatabaseCreateExecutor) createInitialSchema(ctx context.Context, dri
 	}
 
 	mc := &migrateContext{
+		syncer:      exec.schemaSyncer,
+		profile:     exec.profile,
 		instance:    instance,
 		database:    database,
 		sheet:       nil,
