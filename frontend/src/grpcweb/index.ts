@@ -39,7 +39,7 @@ const address = import.meta.env.BB_GRPC_LOCAL || window.location.origin;
 
 const transport = createConnectTransport({
   baseUrl: address,
-  useBinaryFormat: true,
+  useBinaryFormat: false,
   interceptors: [
     authInterceptor,
     activeInterceptor,
