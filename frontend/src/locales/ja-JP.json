@@ -246,7 +246,8 @@
     },
     "collapse": "閉じる",
     "line": "行",
-    "column": "列"
+    "column": "列",
+    "position": "位置"
   },
   "error-page": {
     "go-back-home": "ホームページに戻る"
@@ -2144,7 +2145,8 @@
     "format-default": "デフォルト",
     "column-display-format": "列表示形式",
     "next-row": "次の行",
-    "previous-row": "前の行"
+    "previous-row": "前の行",
+    "syntax-error-position": "{line} 行目、{column} 列目"
   },
   "schema-editor": {
     "self": "スキーマエディタ",
@@ -2212,8 +2214,7 @@
       "invalid-view-name": "無効なビュー名です",
       "duplicated-view-name": "重複したビュー名"
     },
-    "confirm-to-close": {
-    },
+    "confirm-to-close": {},
     "foreign-key": {
       "edit": "外部キーを編集",
       "name-description": "外部キーの一意の名前"

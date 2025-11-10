@@ -246,7 +246,8 @@
     },
     "collapse": "Colapsar",
     "line": "Línea",
-    "column": "Columna"
+    "column": "Columna",
+    "position": "Posición"
   },
   "error-page": {
     "go-back-home": "Volver al inicio"
@@ -2144,7 +2145,8 @@
     "format-default": "Por defecto",
     "column-display-format": "Formato de visualización de columna",
     "next-row": "siguiente fila",
-    "previous-row": "Fila anterior"
+    "previous-row": "Fila anterior",
+    "syntax-error-position": "Línea {line}, Columna {column}"
   },
   "schema-editor": {
     "self": "Editor de esquema",
@@ -2212,8 +2214,7 @@
       "invalid-view-name": "Nombre de vista no válido",
       "duplicated-view-name": "Nombre de vista duplicado"
     },
-    "confirm-to-close": {
-    },
+    "confirm-to-close": {},
     "foreign-key": {
       "edit": "Editar clave externa",
       "name-description": "El nombre único de la clave externa"

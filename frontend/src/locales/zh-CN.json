@@ -246,7 +246,8 @@
     },
     "collapse": "收起",
     "line": "行",
-    "column": "列"
+    "column": "列",
+    "position": "位置"
   },
   "error-page": {
     "go-back-home": "回到主页"
@@ -2144,7 +2145,8 @@
     "format-default": "默认",
     "column-display-format": "列显示格式",
     "next-row": "下一行",
-    "previous-row": "上一行"
+    "previous-row": "上一行",
+    "syntax-error-position": "第 {line} 行，第 {column} 列"
   },
   "schema-editor": {
     "self": "Schema 编辑器",
@@ -2212,8 +2214,7 @@
       "invalid-view-name": "无效的视图名称",
       "duplicated-view-name": "重复的视图名称"
     },
-    "confirm-to-close": {
-    },
+    "confirm-to-close": {},
     "foreign-key": {
       "edit": "修改外键",
       "name-description": "外键的名称应该是唯一的"

@@ -10,6 +10,7 @@
       <slot name="suffix" />
     </div>
     <PostgresError v-if="resultSet" :result-set="resultSet" />
+    <SyntaxError v-if="resultSet" :result-set="resultSet" />
   </div>
 </template>
 
@@ -18,6 +19,7 @@ import { BBAttention } from "@/bbkit";
 import type { SQLResultSetV1 } from "@/types";
 import { useSQLResultViewContext } from "../context";
 import PostgresError from "./PostgresError.vue";
+import SyntaxError from "./SyntaxError.vue";
 
 defineProps<{
   error: string | undefined;

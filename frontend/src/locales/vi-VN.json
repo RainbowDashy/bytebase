@@ -246,7 +246,8 @@
     },
     "collapse": "Sụp đổ",
     "line": "Dòng",
-    "column": "Cột"
+    "column": "Cột",
+    "position": "Vị trí"
   },
   "error-page": {
     "go-back-home": "Về trang chủ"
@@ -2144,7 +2145,8 @@
     "format-default": "Mặc định",
     "column-display-format": "Định dạng hiển thị cột",
     "next-row": "Dòng tiếp theo",
-    "previous-row": "Dòng trước"
+    "previous-row": "Dòng trước",
+    "syntax-error-position": "Dòng {line}, Cột {column}"
   },
   "schema-editor": {
     "self": "Trình soạn thảo lược đồ",
@@ -2212,8 +2214,7 @@
       "invalid-view-name": "Tên khung nhìn không hợp lệ",
       "duplicated-view-name": "Tên khung nhìn trùng lặp"
     },
-    "confirm-to-close": {
-    },
+    "confirm-to-close": {},
     "foreign-key": {
       "edit": "Chỉnh sửa khóa ngoại",
       "name-description": "Tên duy nhất của khóa ngoại"

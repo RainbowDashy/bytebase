@@ -246,7 +246,8 @@
     "collapse": "Collapse",
     "line": "Line",
     "column": "Column",
-    "apply-to-database": "Apply to database"
+    "apply-to-database": "Apply to database",
+    "position": "Position"
   },
   "error-page": {
     "go-back-home": "Go back home"
@@ -2144,7 +2145,8 @@
     "format-default": "Default",
     "column-display-format": "Column Display Format",
     "next-row": "Next Row",
-    "previous-row": "Previous Row"
+    "previous-row": "Previous Row",
+    "syntax-error-position": "Line {line}, Column {column}"
   },
   "schema-editor": {
     "self": "Schema Editor",
@@ -2212,8 +2214,7 @@
       "invalid-view-name": "Invalid view name",
       "duplicated-view-name": "Duplicated view name"
     },
-    "confirm-to-close": {
-    },
+    "confirm-to-close": {},
     "foreign-key": {
       "edit": "Edit foreign key",
       "name-description": "The unique name of foreign key"
