@@ -452,6 +452,19 @@ func queryRetry(
 			!store.IsObjectCaseSensitive(instance),
 		)
 		if err != nil {
+			// Handle syntax errors with structured details
+			if syntaxErr, ok := err.(*parserbase.SyntaxError); ok {
+				result := &v1pb.QueryResult{
+					Error:     syntaxErr.Message,
+					Statement: statement,
+					DetailedError: &v1pb.QueryResult_SyntaxError{
+						SyntaxError: &v1pb.QueryResult_SyntaxErrorDetail{
+							Position: convertToPosition(syntaxErr.Position),
+						},
+					},
+				}
+				return []*v1pb.QueryResult{result}, nil, time.Duration(0), nil
+			}
 			return nil, nil, time.Duration(0), err
 		}
 		// After replacing backup table with source, we can apply the original access check and mask sensitive data for backup table.
@@ -529,6 +542,20 @@ func queryRetry(
 			!store.IsObjectCaseSensitive(instance),
 		)
 		if err != nil {
+			// Handle syntax errors with structured details
+			if syntaxErr, ok := err.(*parserbase.SyntaxError); ok {
+				result := &v1pb.QueryResult{
+					Error:     syntaxErr.Message,
+					Statement: statement,
+					DetailedError: &v1pb.QueryResult_SyntaxError{
+						SyntaxError: &v1pb.QueryResult_SyntaxErrorDetail{
+							Position: convertToPosition(syntaxErr.Position),
+						},
+					},
+				}
+				// Return results from first execution plus syntax error
+				return append(results, result), nil, duration, nil
+			}
 			return nil, nil, time.Duration(0), err
 		}
 		// After replacing backup table with source, we can apply the original access check and mask sensitive data for backup table.
