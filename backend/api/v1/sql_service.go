@@ -238,21 +238,21 @@ func (s *SQLService) Query(ctx context.Context, req *connect.Request[v1pb.QueryR
 		if connectErr, ok := queryErr.(*connect.Error); ok {
 			code = connectErr.Code()
 		} else if syntaxErr, ok := queryErr.(*parserbase.SyntaxError); ok {
-			err := connect.NewError(connect.CodeInvalidArgument, syntaxErr)
-			if detail, detailErr := connect.NewErrorDetail(&v1pb.PlanCheckRun_Result{
-				Code:    int32(advisor.StatementSyntaxError),
-				Content: syntaxErr.Message,
-				Title:   "Syntax error",
-				Status:  v1pb.Advice_ERROR,
-				Report: &v1pb.PlanCheckRun_Result_SqlReviewReport_{
-					SqlReviewReport: &v1pb.PlanCheckRun_Result_SqlReviewReport{
-						StartPosition: convertToPosition(syntaxErr.Position),
+			// Return error with structured details in QueryResult
+			// Note: We return error in results array, not as connect.Error,
+			// to support stop-on-error behavior where we need partial results
+			results = []*v1pb.QueryResult{
+				{
+					Error:     syntaxErr.Message,
+					Statement: statement,
+					DetailedError: &v1pb.QueryResult_SyntaxError{
+						SyntaxError: &v1pb.QueryResult_SyntaxErrorDetail{
+							Position: convertToPosition(syntaxErr.Position),
+						},
 					},
 				},
-			}); detailErr == nil {
-				err.AddDetail(detail)
 			}
-			return nil, err
+			return connect.NewResponse(&v1pb.QueryResponse{Results: results}), nil
 		}
 		return nil, connect.NewError(code, errors.New(queryErr.Error()))
 	}
