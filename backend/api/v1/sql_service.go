@@ -475,6 +475,15 @@ func queryRetry(
 		if optionalAccessCheck != nil {
 			// Check query access
 			if err := optionalAccessCheck(ctx, instance, database, user, spans, queryContext.Explain); err != nil {
+				// Check if it's a permission denied error and extract resource
+				if connectErr, ok := err.(*connect.Error); ok && connectErr.Code() == connect.CodePermissionDenied {
+					errMsg := connectErr.Message()
+					if strings.Contains(errMsg, "permission denied to access resource:") {
+						resource := strings.TrimSpace(strings.TrimPrefix(errMsg, "permission denied to access resource:"))
+						// Return as QueryResult with structured error instead of error return
+						return []*v1pb.QueryResult{createPermissionDeniedResult(resource, statement)}, nil, time.Duration(0), nil
+					}
+				}
 				return nil, nil, time.Duration(0), err
 			}
 			slog.Debug("optional access check", slog.String("instance", instance.ResourceID), slog.String("database", database.DatabaseName))
@@ -752,6 +761,18 @@ func queryRetryStopOnError(
 	}
 
 	return allResults, allSpans, totalDuration, firstError
+}
+
+func createPermissionDeniedResult(resource string, statement string) *v1pb.QueryResult {
+	return &v1pb.QueryResult{
+		Error:     fmt.Sprintf("permission denied to access resource: %s", resource),
+		Statement: statement,
+		DetailedError: &v1pb.QueryResult_PermissionDenied{
+			PermissionDenied: &v1pb.QueryResult_PermissionDeniedDetail{
+				Resource: resource,
+			},
+		},
+	}
 }
 
 func executeWithTimeout(ctx context.Context, stores *store.Store, licenseService *enterprise.LicenseService, driver db.Driver, conn *sql.Conn, statement string, queryContext db.QueryContext) ([]*v1pb.QueryResult, time.Duration, error) {
