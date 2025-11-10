@@ -257,6 +257,17 @@ const missingResource = computed((): DatabaseResource | undefined => {
   if (props.resultSet?.status !== Code.PermissionDenied) {
     return;
   }
+
+  // Check for structured error first
+  const firstResult = props.resultSet.results[0];
+  if (firstResult?.detailedError?.case === "permissionDenied") {
+    const resource = firstResult.detailedError.value.resource;
+    if (resource) {
+      return parseStringToResource(resource);
+    }
+  }
+
+  // Fallback to parsing error string for backward compatibility
   const prefix = "permission denied to access resource: ";
   if (!props.resultSet.error.includes(prefix)) {
     return;
