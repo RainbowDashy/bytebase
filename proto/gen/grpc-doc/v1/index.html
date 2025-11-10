@@ -1984,7 +1984,15 @@
                 </li>
               
                 <li>
+                  <a href="#bytebase.v1.QueryResult.PermissionDeniedDetail"><span class="badge">M</span>QueryResult.PermissionDeniedDetail</a>
+                </li>
+              
+                <li>
                   <a href="#bytebase.v1.QueryResult.PostgresError"><span class="badge">M</span>QueryResult.PostgresError</a>
+                </li>
+              
+                <li>
+                  <a href="#bytebase.v1.QueryResult.SyntaxErrorDetail"><span class="badge">M</span>QueryResult.SyntaxErrorDetail</a>
                 </li>
               
                 <li>
@@ -22111,6 +22119,20 @@ The types come from the Golang SQL driver. </p></td>
                 </tr>
               
                 <tr>
+                  <td>syntax_error</td>
+                  <td><a href="#bytebase.v1.QueryResult.SyntaxErrorDetail">QueryResult.SyntaxErrorDetail</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>permission_denied</td>
+                  <td><a href="#bytebase.v1.QueryResult.PermissionDeniedDetail">QueryResult.PermissionDeniedDetail</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
                   <td>messages</td>
                   <td><a href="#bytebase.v1.QueryResult.Message">QueryResult.Message</a></td>
                   <td>repeated</td>
@@ -22154,6 +22176,30 @@ Examples include PostgreSQL&#39;s RAISE NOTICE, MSSQL&#39;s PRINT, or Oracle&#39
                   <td><a href="#string">string</a></td>
                   <td></td>
                   <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="bytebase.v1.QueryResult.PermissionDeniedDetail">QueryResult.PermissionDeniedDetail</h3>
+        <p>Permission denied with resource information for "Request Access" button</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>resource</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>Resource path: instances/{instance}/databases/{database}/schemas/{schema}/tables/{table} </p></td>
                 </tr>
               
             </tbody>
@@ -22290,6 +22336,30 @@ Examples include PostgreSQL&#39;s RAISE NOTICE, MSSQL&#39;s PRINT, or Oracle&#39
                   <td><a href="#string">string</a></td>
                   <td></td>
                   <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="bytebase.v1.QueryResult.SyntaxErrorDetail">QueryResult.SyntaxErrorDetail</h3>
+        <p>Syntax error with position information for editor highlighting</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>position</td>
+                  <td><a href="#bytebase.v1.Position">Position</a></td>
+                  <td></td>
+                  <td><p>Position information for highlighting in editor </p></td>
                 </tr>
               
             </tbody>

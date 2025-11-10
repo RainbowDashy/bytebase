@@ -472,7 +472,9 @@
     - [QueryResponse](#bytebase-v1-QueryResponse)
     - [QueryResult](#bytebase-v1-QueryResult)
     - [QueryResult.Message](#bytebase-v1-QueryResult-Message)
+    - [QueryResult.PermissionDeniedDetail](#bytebase-v1-QueryResult-PermissionDeniedDetail)
     - [QueryResult.PostgresError](#bytebase-v1-QueryResult-PostgresError)
+    - [QueryResult.SyntaxErrorDetail](#bytebase-v1-QueryResult-SyntaxErrorDetail)
     - [QueryRow](#bytebase-v1-QueryRow)
     - [RowValue](#bytebase-v1-RowValue)
     - [RowValue.Timestamp](#bytebase-v1-RowValue-Timestamp)
@@ -7854,6 +7856,8 @@ OrgPolicyService manages organizational policies at various resource levels.
 | latency | [google.protobuf.Duration](#google-protobuf-Duration) |  | The time it takes to execute the query. |
 | statement | [string](#string) |  | The query statement for the result. |
 | postgres_error | [QueryResult.PostgresError](#bytebase-v1-QueryResult-PostgresError) |  |  |
+| syntax_error | [QueryResult.SyntaxErrorDetail](#bytebase-v1-QueryResult-SyntaxErrorDetail) |  |  |
+| permission_denied | [QueryResult.PermissionDeniedDetail](#bytebase-v1-QueryResult-PermissionDeniedDetail) |  |  |
 | messages | [QueryResult.Message](#bytebase-v1-QueryResult-Message) | repeated | Informational or debug messages returned by the database engine during query execution. Examples include PostgreSQL&#39;s RAISE NOTICE, MSSQL&#39;s PRINT, or Oracle&#39;s DBMS_OUTPUT.PUT_LINE. |
 | masked | [MaskingReason](#bytebase-v1-MaskingReason) | repeated | Masking reasons for each column (empty for non-masked columns). |
 
@@ -7872,6 +7876,21 @@ OrgPolicyService manages organizational policies at various resource levels.
 | ----- | ---- | ----- | ----------- |
 | level | [QueryResult.Message.Level](#bytebase-v1-QueryResult-Message-Level) |  |  |
 | content | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="bytebase-v1-QueryResult-PermissionDeniedDetail"></a>
+
+### QueryResult.PermissionDeniedDetail
+Permission denied with resource information for &#34;Request Access&#34; button
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| resource | [string](#string) |  | Resource path: instances/{instance}/databases/{database}/schemas/{schema}/tables/{table} |
 
 
 
@@ -7904,6 +7923,21 @@ for field description.
 | file | [string](#string) |  |  |
 | line | [int32](#int32) |  |  |
 | routine | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="bytebase-v1-QueryResult-SyntaxErrorDetail"></a>
+
+### QueryResult.SyntaxErrorDetail
+Syntax error with position information for editor highlighting
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| position | [Position](#bytebase-v1-Position) |  | Position information for highlighting in editor |
 
 
 

@@ -278,6 +278,18 @@ export declare type QueryResult = Message<"bytebase.v1.QueryResult"> & {
      */
     value: QueryResult_PostgresError;
     case: "postgresError";
+  } | {
+    /**
+     * @generated from field: bytebase.v1.QueryResult.SyntaxErrorDetail syntax_error = 13;
+     */
+    value: QueryResult_SyntaxErrorDetail;
+    case: "syntaxError";
+  } | {
+    /**
+     * @generated from field: bytebase.v1.QueryResult.PermissionDeniedDetail permission_denied = 14;
+     */
+    value: QueryResult_PermissionDeniedDetail;
+    case: "permissionDenied";
   } | { case: undefined; value?: undefined };
 
   /**
@@ -400,6 +412,46 @@ export declare type QueryResult_PostgresError = Message<"bytebase.v1.QueryResult
  * Use `create(QueryResult_PostgresErrorSchema)` to create a new message.
  */
 export declare const QueryResult_PostgresErrorSchema: GenMessage<QueryResult_PostgresError>;
+
+/**
+ * Syntax error with position information for editor highlighting
+ *
+ * @generated from message bytebase.v1.QueryResult.SyntaxErrorDetail
+ */
+export declare type QueryResult_SyntaxErrorDetail = Message<"bytebase.v1.QueryResult.SyntaxErrorDetail"> & {
+  /**
+   * Position information for highlighting in editor
+   *
+   * @generated from field: bytebase.v1.Position position = 1;
+   */
+  position?: Position;
+};
+
+/**
+ * Describes the message bytebase.v1.QueryResult.SyntaxErrorDetail.
+ * Use `create(QueryResult_SyntaxErrorDetailSchema)` to create a new message.
+ */
+export declare const QueryResult_SyntaxErrorDetailSchema: GenMessage<QueryResult_SyntaxErrorDetail>;
+
+/**
+ * Permission denied with resource information for "Request Access" button
+ *
+ * @generated from message bytebase.v1.QueryResult.PermissionDeniedDetail
+ */
+export declare type QueryResult_PermissionDeniedDetail = Message<"bytebase.v1.QueryResult.PermissionDeniedDetail"> & {
+  /**
+   * Resource path: instances/{instance}/databases/{database}/schemas/{schema}/tables/{table}
+   *
+   * @generated from field: string resource = 1;
+   */
+  resource: string;
+};
+
+/**
+ * Describes the message bytebase.v1.QueryResult.PermissionDeniedDetail.
+ * Use `create(QueryResult_PermissionDeniedDetailSchema)` to create a new message.
+ */
+export declare const QueryResult_PermissionDeniedDetailSchema: GenMessage<QueryResult_PermissionDeniedDetail>;
 
 /**
  * @generated from message bytebase.v1.QueryResult.Message

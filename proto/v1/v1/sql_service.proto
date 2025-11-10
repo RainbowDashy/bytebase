@@ -201,6 +201,8 @@ message QueryResult {
 
   oneof detailed_error {
     PostgresError postgres_error = 9;
+    SyntaxErrorDetail syntax_error = 13;
+    PermissionDeniedDetail permission_denied = 14;
   }
 
   // refer https://www.postgresql.org/docs/11/protocol-error-fields.html
@@ -223,6 +225,18 @@ message QueryResult {
     string file = 15;
     int32 line = 16;
     string routine = 17;
+  }
+
+  // Syntax error with position information for editor highlighting
+  message SyntaxErrorDetail {
+    // Position information for highlighting in editor
+    Position position = 1;
+  }
+
+  // Permission denied with resource information for "Request Access" button
+  message PermissionDeniedDetail {
+    // Resource path: instances/{instance}/databases/{database}/schemas/{schema}/tables/{table}
+    string resource = 1;
   }
 
   reserved 11;
