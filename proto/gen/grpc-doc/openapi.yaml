@@ -11819,7 +11819,7 @@ components:
             properties:
                 name:
                     type: string
-                    description: 'Format: projects/{project}/plans/{plan}/planCheckRuns/{planCheckRun}'
+                    description: 'Format: projects/{project}/plans/{plan}/planCheckRun'
                 status:
                     enum:
                         - STATUS_UNSPECIFIED
