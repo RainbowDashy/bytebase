@@ -549,24 +549,46 @@ func (s *Store) ListPolicies(ctx context.Context, find *FindPolicyMessage) ([]*P
 
 // CreatePolicy creates a policy.
 func (s *Store) CreatePolicy(ctx context.Context, create *PolicyMessage) (*PolicyMessage, error) {
-	tx, err := s.GetDB().BeginTx(ctx, nil)
+	create.UpdatedAt = time.Now()
+
+	q := qb.Q().Space(`
+		INSERT INTO policy (
+			resource_type,
+			resource,
+			inherit_from_parent,
+			type,
+			payload,
+			enforce,
+			updated_at
+		)
+		VALUES (?, ?, ?, ?, ?, ?, ?)
+		ON CONFLICT(resource_type, resource, type) DO UPDATE SET
+			inherit_from_parent = EXCLUDED.inherit_from_parent,
+			payload = EXCLUDED.payload,
+			enforce = EXCLUDED.enforce,
+			updated_at = EXCLUDED.updated_at
+	`,
+		create.ResourceType.String(),
+		create.Resource,
+		create.InheritFromParent,
+		create.Type.String(),
+		create.Payload,
+		create.Enforce,
+		create.UpdatedAt,
+	)
+
+	query, args, err := q.ToSQL()
 	if err != nil {
-		return nil, err
-	}
-	defer tx.Rollback()
-
-	policy, err := upsertPolicyImpl(ctx, tx, create)
-	if err != nil {
-		return nil, err
+		return nil, errors.Wrapf(err, "failed to build sql")
 	}
 
-	if err := tx.Commit(); err != nil {
+	if _, err := s.GetDB().ExecContext(ctx, query, args...); err != nil {
 		return nil, err
 	}
 
-	s.policyCache.Add(getPolicyCacheKey(policy.ResourceType, policy.Resource, policy.Type), policy)
+	s.policyCache.Add(getPolicyCacheKey(create.ResourceType, create.Resource, create.Type), create)
 
-	return policy, nil
+	return create, nil
 }
 
 // UpdatePolicy updates the policy.

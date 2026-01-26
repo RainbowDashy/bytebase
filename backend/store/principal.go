@@ -513,12 +513,6 @@ func (s *Store) CreateUser(ctx context.Context, create *UserMessage) (*UserMessa
 		return nil, errors.Errorf("emails must be lower-case when they are passed into store")
 	}
 
-	tx, err := s.GetDB().BeginTx(ctx, nil)
-	if err != nil {
-		return nil, err
-	}
-	defer tx.Rollback()
-
 	if create.Profile == nil {
 		create.Profile = &storepb.UserProfile{}
 	}
@@ -540,17 +534,13 @@ func (s *Store) CreateUser(ctx context.Context, create *UserMessage) (*UserMessa
 		RETURNING id, created_at
 	`, create.Email, create.Name, create.Type.String(), create.PasswordHash, create.Phone, profileBytes)
 
-	sql, args, err := q.ToSQL()
+	sqlStr, args, err := q.ToSQL()
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to build sql")
 	}
 
 	var userID int
-	if err := tx.QueryRowContext(ctx, sql, args...).Scan(&userID, &create.CreatedAt); err != nil {
-		return nil, err
-	}
-
-	if err := tx.Commit(); err != nil {
+	if err := s.GetDB().QueryRowContext(ctx, sqlStr, args...).Scan(&userID, &create.CreatedAt); err != nil {
 		return nil, err
 	}
 
@@ -611,31 +601,53 @@ func (s *Store) UpdateUser(ctx context.Context, currentUser *UserMessage, patch 
 		return currentUser, nil
 	}
 
-	sql, args, err := qb.Q().Space(`UPDATE principal SET ? WHERE id = ?
+	sqlStr, args, err := qb.Q().Space(`UPDATE principal SET ? WHERE id = ?
 		RETURNING id, deleted, email, name, type, password_hash, mfa_config, phone, profile, created_at`,
 		set, currentUser.ID).ToSQL()
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to build sql")
 	}
 
-	tx, err := s.GetDB().BeginTx(ctx, nil)
-	if err != nil {
+	var updatedUser UserMessage
+	var mfaConfigBytes []byte
+	var profileBytes []byte
+	var typeString string
+	if err := s.GetDB().QueryRowContext(ctx, sqlStr, args...).Scan(
+		&updatedUser.ID,
+		&updatedUser.MemberDeleted,
+		&updatedUser.Email,
+		&updatedUser.Name,
+		&typeString,
+		&updatedUser.PasswordHash,
+		&mfaConfigBytes,
+		&updatedUser.Phone,
+		&profileBytes,
+		&updatedUser.CreatedAt,
+	); err != nil {
 		return nil, err
 	}
-	defer tx.Rollback()
 
-	updatedUser, err := scanPrincipalRow(ctx, tx, sql, args)
-	if err != nil {
-		return nil, err
+	if typeValue, ok := storepb.PrincipalType_value[typeString]; ok {
+		updatedUser.Type = storepb.PrincipalType(typeValue)
+	} else {
+		return nil, errors.Errorf("invalid principal type string: %s", typeString)
 	}
 
-	if err := tx.Commit(); err != nil {
+	mfaConfig := storepb.MFAConfig{}
+	if err := common.ProtojsonUnmarshaler.Unmarshal(mfaConfigBytes, &mfaConfig); err != nil {
 		return nil, err
 	}
+	updatedUser.MFAConfig = &mfaConfig
+
+	profile := storepb.UserProfile{}
+	if err := common.ProtojsonUnmarshaler.Unmarshal(profileBytes, &profile); err != nil {
+		return nil, err
+	}
+	updatedUser.Profile = &profile
 
 	s.userEmailCache.Remove(currentUser.Email)
-	s.userEmailCache.Add(updatedUser.Email, updatedUser)
-	return updatedUser, nil
+	s.userEmailCache.Add(updatedUser.Email, &updatedUser)
+	return &updatedUser, nil
 }
 
 // UpdateUserEmail updates a user's email and all related references.
